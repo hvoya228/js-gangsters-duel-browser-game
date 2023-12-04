@@ -1,50 +1,81 @@
 const player = document.getElementById("player");
 const cactus = document.getElementById("cactus");
+const infoText = document.getElementById("info-text");
+
+let isPressedSpace = false;
+let isDead = false;
 
 // Runs when page is loaded
 window.onload = function() {
-    UpdateInfoText("Jump with space");
+    createGround();
+    updateInfoText("Jump with space");
 };
 
-//Runs when space key is pressed
+//Runs when some key is pressed
 document.addEventListener("keydown", function(event) {
 
     if (event.key === " " && !event.repeat) {
-        Jump();
+        
+        if (!isDead) {
+            isPressedSpace = true;
+            doPlayerJump();
+        }
+    }
+
+    if (event.key === "r") {
+        
+        if (isDead) {
+            this.location.reload();
+        }
     }
 
 });
 
-//Runs when player collided with bullet
+//Runs when player collided with cactus
 let isAlive = setInterval( function() {
 
-    let playerTop = parseInt(window.getComputedStyle(player).getPropertyValue("top"))
-    let cactusLeft = parseInt(window.getComputedStyle(cactus).getPropertyValue("left"))
+    const playerRect = player.getBoundingClientRect();
+    const obstacleRect = cactus.getBoundingClientRect();
 
-    if (cactusLeft < 50 && cactusLeft > 0 && playerTop >= 400) {
-        SetGameOver();
+    if ((playerRect.right > obstacleRect.left) && !isPressedSpace) {
+        initializeGameOver();
     }
 
 }, 10);
 
-function UpdateInfoText(text) {
-    document.getElementById("infoText").textContent = String(text);
+function updateInfoText(text) {
+    infoText.textContent = String(text);
 }
 
-function Jump() {
+function doPlayerJump() {
 
-    if (player.classList != "jump") {
+    if (player.classList != "jump" && !isDead) {
         player.classList.add("jump")
     }
 
     setTimeout( function() {
         player.classList.remove("jump")
+        isPressedSpace = false;
     }, 300);
 
 }
 
-function SetGameOver(){
-    UpdateInfoText("GameOver!");
-    cactus.classList.add("paused");
+function initializeGameOver() {
+    isDead = true;
+    updateInfoText("GameOver! Press R to restart...");
     cactus.style.backgroundImage = "none";
+    player.style.backgroundImage = "url(img/deadPlayer.gif)";
+}
+
+function createGround() {
+    const pixelColors = ['#8B4513', '#D2691E', '#A52A2A', '#8B4513', '#D2691E'];
+    const numberOfPixels = 140;
+    const pixelArtContainer = document.getElementById('pixelArtContainer');
+
+    for (let i = 0; i < numberOfPixels; i++) {
+        const pixel = document.createElement('div');
+        pixel.className = 'pixel';
+        pixel.style.backgroundColor = pixelColors[Math.floor(Math.random() * pixelColors.length)];
+        pixelArtContainer.appendChild(pixel);
+    }
 }
