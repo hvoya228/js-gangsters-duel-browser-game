@@ -1,13 +1,19 @@
 const player = document.getElementById("player");
 const cactus = document.getElementById("cactus");
 const infoText = document.getElementById("info-text");
+const scoreText = document.getElementById("score-text");
 
 let isPressedSpace = false;
 let isDead = false;
+let score;
 
 // Runs when page is loaded
 window.onload = function() {
+
     createGround();
+
+    score = 0;
+    updateScoreText(score);
     updateInfoText("Jump with space");
 };
 
@@ -32,7 +38,7 @@ document.addEventListener("keydown", function(event) {
 });
 
 //Runs when player collided with cactus
-let isAlive = setInterval( function() {
+let collisionDetection = setInterval( function() {
 
     const playerRect = player.getBoundingClientRect();
     const obstacleRect = cactus.getBoundingClientRect();
@@ -42,6 +48,19 @@ let isAlive = setInterval( function() {
     }
 
 }, 10);
+
+let scoreController = setInterval( () => {
+
+    if (!isDead) {
+        score++;
+        updateScoreText(score);
+    }
+
+}, 1000);
+
+function updateScoreText(score) {
+    scoreText.textContent = `score: ${String(score)}`;
+}
 
 function updateInfoText(text) {
     infoText.textContent = String(text);
