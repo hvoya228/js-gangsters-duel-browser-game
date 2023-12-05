@@ -35,6 +35,11 @@ document.addEventListener("keydown", function(event) {
         }
     }
 
+    if (event.key === "p") {
+        
+        window.location.href = "index.html";
+    }
+
 });
 
 //Runs when player collided with cactus
@@ -80,13 +85,16 @@ function doPlayerJump() {
 }
 
 function initializeGameOver() {
+
     isDead = true;
-    updateInfoText("GameOver! Press R to restart...");
+    updateInfoText("GameOver! Press R to restart or P to exit...");
     cactus.style.backgroundImage = "none";
     player.style.backgroundImage = "url(img/deadPlayer.gif)";
+
 }
 
 function createGround() {
+
     const pixelColors = ['#8B4513', '#D2691E', '#A52A2A', '#8B4513', '#D2691E'];
     const numberOfPixels = 140;
     const pixelArtContainer = document.getElementById('pixelArtContainer');
@@ -97,4 +105,5 @@ function createGround() {
         pixel.style.backgroundColor = pixelColors[Math.floor(Math.random() * pixelColors.length)];
         pixelArtContainer.appendChild(pixel);
     }
+    
 }
